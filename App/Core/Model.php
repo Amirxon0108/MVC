@@ -27,13 +27,15 @@ public function delete($id){
   return $stmt->execute();
    
 }
-public function updat($data,$id){
-    $columns = implode(",",array_keys($data));
-    $placeeholders = ":" . implode(":" , array_keys($data));
-    $stmt = $this->pdo->prepare("UPDATE {$this->table}  SET $columns WHERE id=':id'");
-    $stmt->bindValue(':id', $id ,PDO::PARAM_INT);
-  return  $stmt->execute($data);
-   
+public function update($id,$data){
+$fields =[];
+foreach ($data as $key=>$value){
+  $fields[] = "$key = :$key";
 }
+$set = implode (', ',$fields);
+$stmt =$this->pdo->prepare("UPDATE {$this->table} SET $set WHERE id =:id");
+$data ['id'] = $id;
+return $stmt->execute($data);
 
+}
 }
